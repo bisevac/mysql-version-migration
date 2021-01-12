@@ -210,20 +210,18 @@ const run = function run(folder, filename) {
   });
 };
 
-const sqlFilesRunner = function sqlFilesRunner(fileArr) {
-  const promiseArr = [];
-  Object.keys(fileArr).forEach((key) => {
-    if (!fileArr[key].length) {
-      return;
+const sqlFilesRunner = async function sqlFilesRunner(fileArr) {
+  const keys = Object.keys(fileArr) || [];
+
+  for (const key of keys) {
+    const items = fileArr[key] || [];
+
+    for (const item of items) {
+      await run(key, item);
     }
-    fileArr[key].forEach((item) => {
-      promiseArr.push(run(key, item));
-    });
-  });
+  }
 
-  if (!promiseArr.length) return Promise.resolve();
-
-  return Promise.all(promiseArr);
+  return true;
 };
 
 const migrate = function migrate() {
